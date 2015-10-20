@@ -245,6 +245,33 @@ class TestGatewayApp(AsyncHTTPTestCase, LogTrapTestCase):
         self.assertEqual(response.headers.get('Content-Security-Policy'), None)
 
     @gen_test
+    def test_no_origin_restriction_serverside(self):
+        # Send an Origin header
+        # Request with the token now
+        response = yield self.http_client.fetch(
+            self.get_url('/api/kernels'),
+            method='POST',
+            body='{}',
+            headers={'Origin': 'fake-origin'},
+            raise_error=False
+        )
+        self.assertEqual(response.code, 201)
+
+        kernel = json_decode(response.body)
+
+        # Request websocket connection with mismatched Host and Origin headers
+        ws_url = 'ws://localhost:{}/api/kernels/{}/channels'.format(
+            self.get_http_port(),
+            url_escape(kernel['id'])
+        )
+        ws_req = HTTPRequest(ws_url, 
+            headers={'Origin': 'fake-origin', 'Host': 'fake-host'},
+        )
+        
+        ws = yield websocket_connect(ws_req)
+        ws.close()
+
+    @gen_test
     def test_get_api(self):
         '''Server should respond with the API version metadata.'''
         response = yield self.http_client.fetch(

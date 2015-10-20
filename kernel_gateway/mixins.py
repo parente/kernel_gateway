@@ -32,8 +32,15 @@ class CORSMixin(object):
 class TokenAuthorizationMixin(object):
     '''
     Adds token authentication to tornado.web.RequestHandlers and 
-    tornado.websocket.WebsocketHandlers.
+    tornado.websocket.WebsocketHandlers. Removes origin checks in favor of
+    token auth checks.
     '''
+    def check_origin(self, origin=None):
+        '''
+        Allow all origins. Use auth token to control access.
+        '''
+        return True
+
     def prepare(self):
         '''
         If kg_auth_token is present in the application settings,
