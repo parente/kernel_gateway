@@ -40,6 +40,7 @@ class KernelGatewayApp(JupyterApp):
     # Server IP / PORT binding
     port_env = 'KG_PORT'
     port = Integer(config=True,
+        default_value=8888,
         help="Port on which to listen (KG_PORT env var)"
     )
     def _port_default(self):
@@ -47,6 +48,7 @@ class KernelGatewayApp(JupyterApp):
 
     ip_env = 'KG_IP'
     ip = Unicode(config=True,
+        default_value='127.0.0.1',
         help="IP address on which to listen (KG_IP env var)"
     )
     def _ip_default(self):
@@ -55,6 +57,7 @@ class KernelGatewayApp(JupyterApp):
     # Base URL
     base_url_env = 'KG_BASE_URL'
     base_url = Unicode(config=True,
+        default_value='/',
         help='''The base path on which all API resources are mounted (KG_BASE_URL env var)''')
     def _base_url_default(self):
         return os.getenv(self.base_url_env, '/')
@@ -112,6 +115,7 @@ class KernelGatewayApp(JupyterApp):
 
     max_kernels_env = 'KG_MAX_KERNELS'
     max_kernels = Integer(config=True,
+        default_value=None,
         allow_none=True,
         help='Limits the number of kernel instances allowed to run by this gateway. (KG_MAX_KERNELS env var)'
     )
@@ -121,6 +125,7 @@ class KernelGatewayApp(JupyterApp):
 
     seed_uri_env = 'KG_SEED_URI'
     seed_uri = Unicode(config=True,
+        default_value=None,
         allow_none=True,
         help='Runs the notebook (.ipynb) at the given URI on every kernel launched. (KG_SEED_URI env var)'
     )
