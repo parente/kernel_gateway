@@ -269,6 +269,8 @@ class KernelGatewayApp(JupyterApp):
         if self.seed_uri is not None:
             # Note: must be set before instantiating a SeedingMappingKernelManager
             self.seed_notebook = self._load_notebook(self.seed_uri)
+        elif self.api == 'notebook-http':
+            raise RuntimeError('notebook-http mode requires a seed_uri')
 
         # Only pass a default kernel name when one is provided. Otherwise,
         # adopt whatever default the kernel manager wants to use.
